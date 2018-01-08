@@ -1,0 +1,36 @@
+{
+	"name" : "dwightframework-pluginauth/dwightframework-pluginauth",
+	"require" : {
+		"dwightframework/main" : "~1.4"
+	},
+	"repositories" : [{
+			"type" : "composer",
+			"url" : "https://lin0.stealthpartner.com/dwpackagist/",
+			"name" : "STEALTH dwpackagist"
+		}
+	],
+	"autoload" : {
+		"files" : [
+			"plugin/auth.php"
+		],
+		"classmap" : [
+			"plugin/"
+		],
+		"psr-4" : {
+			"plugin\\" : "plugin"
+		},
+		"psr-0" : {
+			"plugin\\" : "plugin"
+		}
+	},
+	"minimum-stability" : "stable",
+	"authors" : [{
+			"name" : "Dwight Wilbanks",
+			"email" : "dwight@dwightwilbanks.org",
+			"homepage" : "http://www.stealthpartner.com"
+		}
+	],
+	"license" : "proprietary",
+	"type" : "library",
+	"homepage" : "http://www.stealthpartner.com"
+}
