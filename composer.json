@@ -1,5 +1,5 @@
 {
-	"name" : "dwightframework-pluginauth/dwightframework-pluginauth",
+	"name" : "dwightframework/pluginauth",
 	"require" : {
 		"dwightframework/main" : "~1.4"
 	},
