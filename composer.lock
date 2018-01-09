@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "58a82f09509796a9296b1571d7f5c068",
+    "content-hash": "617bfe39ea3e12a7d2e490a3392104e7",
     "packages": [
         {
             "name": "dwightframework/main",
-            "version": "1.4",
+            "version": "1.5",
             "source": {
                 "type": "git",
                 "url": "https://dwightwilbanks@bitbucket.org/stealthpartner/main.git",
-                "reference": "f4c642dbeedd594f645ef60d452f84d9566c9c2b"
+                "reference": "3093a5aed17420effaec858f954afbd4d55effde"
             },
             "require": {
                 "kint-php/kint": "~2.2"
@@ -43,7 +43,7 @@
                 }
             ],
             "homepage": "http://www.stealthpartner.com",
-            "time": "2018-01-08T07:02:01+00:00"
+            "time": "2018-01-09T05:11:16+00:00"
         },
         {
             "name": "kint-php/kint",

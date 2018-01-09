@@ -1,7 +1,7 @@
 {
 	"name" : "dwightframework/pluginauth",
 	"require" : {
-		"dwightframework/main" : "~1.4"
+		"dwightframework/main" : "~1.5"
 	},
 	"repositories" : [{
 			"type" : "composer",
@@ -11,7 +11,7 @@
 	],
 	"autoload" : {
 		"files" : [
-			"init.php"
+			"init_pluginauth.php"
 		],
 		"classmap" : [
 			"plugin/"

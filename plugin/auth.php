@@ -4,7 +4,6 @@ namespace plugin;
 class auth extends \dw\_plugin {
     public static $authType = null;
     private static $sessData = null;
-  
     static function event_dw_xhtml_htmlhead_pre() {
         $authType = \plugin\auth::authtype();
         \dw\xhtml::AddMeta('authtype', $authType);
@@ -35,57 +34,13 @@ class auth extends \dw\_plugin {
         $authType = "Session opened at " . $passwordtime->format("Y-m-d  H:i:s");
         \plugin\auth::authtype($authType);
     }
-    private static function isWhitelist($ipAddress) {
-        $whitelistip['ChinaOffice'] = '183.11.38.214';
-        $whitelistip['ChinaOffice2'] = '183.11.70.90';
-        $whitelistip['LAOffice1'] = '173.51.77.65';
-        $whitelistip['LAOffice2'] = '173.51.77.66';
-        $whitelistip['LAOffice3'] = '173.51.77.67';
-        $whitelistip['LAOffice4'] = '173.51.77.68';
-        $whitelistip['localhost-ip4'] = '127.0.0.1';
-        $whitelistip['localhost-ip6'] = '::1';
-        $whitelistip['dwightpldt'] = '124.104.243.183';
-        $whitelistip['lin.stealthpartner.com'] = '45.79.132.66';
-        $whitelistip['lin0.stealthpartner.com'] = '139.162.4.152';
-        $whitelistip['am.stealthpartner.com'] = '13.58.56.237';
-        
-        // $whitelistip['dwightpldt'] ='112.202.99.123';
-        // $whitelistip['dwightpldt'] ='112.207.219.16';
-        // $whitelistip['dwightpldt'] ='112.202.120.245';
-        // $whitelistip['dwightpldt'] ='124.104.254.221';
-        // $whitelistip['dwightpldt'] ='124.104.253.24';
-        // $whitelistip['dwightpldt'] ='49.145.120.175';
-        // $whitelistip['dwightpldt'] ='112.207.197.85';
-        // $whitelistip['dwightpldt'] = '112.202.99.123';
-        // 104.148.3.108 Global Frag Networks
-        // 104.237.90.41 GigeNET Los Angeles
-        // 110.34.147.212 Krypt Technologies Thailand
-        // 113.118.186.6 Shenzhen
-        // 113.87.12.111 Shenzhen
-        // 113.87.12.120 Shenzhen
-        // 113.87.13.88 Shenzhen
-        // 118.193.159.216 Shanghai
-        // 118.193.238.229 Shanghai
-        // 163.125.81.63 China Unicom Shenzen network
-        // 174.139.30.91 Krypt Technologies California
-        // 183.239.140.210 China Mobile communications corporation
-        // 183.239.140.218 China Mobile communications corporation
-        // 183.54.40.175 Shenzhen
-        // 183.54.41.42 Shenzhen
-        // 192.111.134.242 Total Server Solutions Atlanta
-        // 198.15.134.164 SERVERYOU China
-        // 45.56.159.162 SoftLayer Technologies Japan
-        // 45.56.159.213 SoftLayer Technologies Japan
-        // 45.56.159.80 SoftLayer Technologies Japan
-        // 47.90.91.200 Alibaba (China)
-        // 85.203.47.67 Leaseweb Asia Pacific Hong Kong
-        
-        return in_array($_SERVER['REMOTE_ADDR'], $whitelistip);
-    }
     private static function evalAuthType() {
-        if(self::isWhitelist($_SERVER['REMOTE_ADDR'])) {
-            self::$authType = "White list IP " . $_SERVER['REMOTE_ADDR'];
-            return self::$authType;
+        $whitelistip = self::s_config("whitelist");
+        if(is_array($whitelistip)) {
+            if(in_array($_SERVER['REMOTE_ADDR'], $whitelistip)) {
+                self::$authType = "White list IP " . $_SERVER['REMOTE_ADDR'];
+                return self::$authType;
+            }
         }
         $passwordtime = self::getSessData("passwordtime");
         if(! $passwordtime) {
@@ -139,8 +94,8 @@ class auth extends \dw\_plugin {
             if($password == 'iminbantian') {
                 $passwordtime = new \DateTime();
                 \plugin\auth::_set_passwordtime($passwordtime);
-                $loginMethod = ['\db\loginhistoryRecord', create];
-                if( is_callable($loginMethod )){
+                $loginMethod = ['\db\loginhistoryRecord',create ];
+                if(is_callable($loginMethod)) {
                     $loginMethod();
                 }
                 $passwordtime = \plugin\auth::getSessData("passwordtime");
