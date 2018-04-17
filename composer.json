@@ -11,16 +11,13 @@
 	],
 	"autoload" : {
 		"files" : [
-			"init_pluginauth.php"
+			"init_plugin.php"
 		],
 		"classmap" : [
 			"plugin/"
 		],
 		"psr-4" : {
-			"plugin\\" : "plugin"
-		},
-		"psr-0" : {
-			"plugin\\" : "plugin"
+			"auth\\" : "plugin/auth"
 		}
 	},
 	"minimum-stability" : "stable",
