@@ -1,7 +1,7 @@
 {
 	"name" : "dwightframework/pluginauth",
 	"require" : {
-		"dwightframework/main" : "~1.5"
+		"dwightframework/main" : "~1.26.03"
 	},
 	"repositories" : [{
 			"type" : "composer",
