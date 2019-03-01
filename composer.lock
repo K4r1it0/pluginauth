@@ -1,18 +1,18 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "617bfe39ea3e12a7d2e490a3392104e7",
+    "content-hash": "0536b49767038ee2f39bb5725822037e",
     "packages": [
         {
             "name": "dwightframework/main",
-            "version": "1.5",
+            "version": "1.27.17",
             "source": {
                 "type": "git",
                 "url": "https://dwightwilbanks@bitbucket.org/stealthpartner/main.git",
-                "reference": "3093a5aed17420effaec858f954afbd4d55effde"
+                "reference": "0dc69d07d8b88bfdaead4828b959b41c6d566d0c"
             },
             "require": {
                 "kint-php/kint": "~2.2"
@@ -20,16 +20,14 @@
             "type": "library",
             "autoload": {
                 "files": [
-                    "init.php"
+                    "init_main.php"
                 ],
                 "classmap": [
                     "dw/"
                 ],
                 "psr-4": {
-                    "dw\\": "dw"
-                },
-                "psr-0": {
-                    "dw\\": "dw"
+                    "dw\\": "dw",
+                    "dw\\admin\\": "dw/admin"
                 }
             },
             "license": [
@@ -42,8 +40,9 @@
                     "homepage": "http://www.stealthpartner.com"
                 }
             ],
+            "description": "1.27.17",
             "homepage": "http://www.stealthpartner.com",
-            "time": "2018-01-09T05:11:16+00:00"
+            "time": "2019-03-01T18:05:44+00:00"
         },
         {
             "name": "kint-php/kint",

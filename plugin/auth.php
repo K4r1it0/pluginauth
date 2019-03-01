@@ -4,6 +4,7 @@ namespace plugin;
 class auth extends \dw\_plugin {
     public static $authType = null;
     private static $sessData = null;
+    public $whitelist = null;
     static function event_dw_xhtml_htmlhead_pre() {
         $authType = \plugin\auth::authtype();
         \dw\xhtml::AddMeta('authtype', $authType);
@@ -35,9 +36,9 @@ class auth extends \dw\_plugin {
         \plugin\auth::authtype($authType);
     }
     private static function evalAuthType() {
-        $whitelistip = self::s_config("whitelist");
-        if(is_array($whitelistip)) {
-            if(in_array($_SERVER['REMOTE_ADDR'], $whitelistip)) {
+        $whitelist = self::s_config("whitelist");
+        if(is_array($whitelist)) {
+            if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
                 self::$authType = "White list IP " . $_SERVER['REMOTE_ADDR'];
                 return self::$authType;
             }
@@ -75,10 +76,6 @@ class auth extends \dw\_plugin {
         \dw\xhtml::outhtml("You are loging in from an unknown location<br>");
         \dw\xhtml::outhtml("Your current IP address is '$REMOTE_ADDR'<br>");
         $formData['redirect'] = $redirect;
-        $formOpt['method'] = 'post';
-        $formOpt['url']['controller'] = 'identity';
-        $formOpt['url']['action'] = 'login';
-        $formOpt['title'] = "LOGIN";
         \dw\xhtml::form($formData, "auth.login");
         \dw\app::appThrow(null);
     }

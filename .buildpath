@@ -2,7 +2,12 @@
 <buildpath>
 	<buildpathentry kind="src" path="db"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-	<buildpathentry kind="src" path="plugin">
+	<buildpathentry excluding="auth/" kind="src" path="plugin">
+		<attributes>
+			<attribute name="composer" value="source"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="plugin/auth">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
@@ -17,7 +22,12 @@
 			<attribute name="composer" value="vendor"/>
 		</attributes>
 	</buildpathentry>
-	<buildpathentry kind="src" path="vendor/dwightframework/main/dw">
+	<buildpathentry excluding="admin/" kind="src" path="vendor/dwightframework/main/dw">
+		<attributes>
+			<attribute name="composer" value="vendor"/>
+		</attributes>
+	</buildpathentry>
+	<buildpathentry kind="src" path="vendor/dwightframework/main/dw/admin">
 		<attributes>
 			<attribute name="composer" value="vendor"/>
 		</attributes>
