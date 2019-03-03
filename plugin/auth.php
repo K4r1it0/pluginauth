@@ -5,6 +5,11 @@ class auth extends \dw\_plugin {
     public static $authType = null;
     private static $sessData = null;
     public $whitelist = null;
+    public $loginttype = "password";
+    public $users = null;
+    public $password = null;
+    const LOGINTYPE_PASSWORD = "password";
+    const LOGINTYPE_USER = "user";
     static function event_dw_xhtml_htmlhead_pre() {
         $authType = \plugin\auth::authtype();
         \dw\xhtml::AddMeta('authtype', $authType);
@@ -47,7 +52,7 @@ class auth extends \dw\_plugin {
         if(! $passwordtime) {
             return null;
         }
-        return self::authtype("Session opened at " . $passwordtime->format("Y-m-d  H:i:s"));
+        return \plugin\auth::authtype("Session opened at " . $passwordtime->format("Y-m-d  H:i:s"));
     }
     static function authtype($parmAuthValue = null) {
         if(! is_null($parmAuthValue)) {
@@ -72,11 +77,22 @@ class auth extends \dw\_plugin {
         if(is_null($redirect)) {
             $redirect = $_SERVER['REQUEST_URI'];
         }
-        $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
-        \dw\xhtml::outhtml("You are loging in from an unknown location<br>");
-        \dw\xhtml::outhtml("Your current IP address is '$REMOTE_ADDR'<br>");
+        $whitelist = self::s_config("whitelist");
+        if( is_array($whitelist)){
+            $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
+            \dw\xhtml::outhtml("You are loging in from an unknown location<br>");
+            \dw\xhtml::outhtml("Your current IP address is '$REMOTE_ADDR'<br>");
+        }
         $formData['redirect'] = $redirect;
-        \dw\xhtml::form($formData, "auth.login");
+        $loginttype = self::s_config("loginttype");
+        switch( $loginttype){
+            case self::LOGINTYPE_PASSWORD:
+                \dw\xhtml::form($formData, "auth.loginpassword");
+                break;
+            case self::LOGINTYPE_USER:
+                \dw\xhtml::form($formData, "auth.loginuser");
+                break;
+        }
         \dw\app::appThrow(null);
     }
     static function s_action_login() {
@@ -86,18 +102,42 @@ class auth extends \dw\_plugin {
         }
         $redirect = "";
         if(\dw\props::s_post_init()) {
-            $password = \dw\props::s_post_val("password");
             $redirect = \dw\props::s_post_val("redirect");
-            if($password == 'iminbantian') {
-                $passwordtime = new \DateTime();
-                \plugin\auth::_set_passwordtime($passwordtime);
-                $loginMethod = ['\db\loginhistoryRecord',create ];
-                if(is_callable($loginMethod)) {
-                    $loginMethod();
-                }
-                $passwordtime = \plugin\auth::getSessData("passwordtime");
-                $authtype = \plugin\auth::authtype();
-                \dw\xhtml::redirect($redirect);
+            $loginttype = self::s_config("loginttype");
+            switch( $loginttype){
+                case self::LOGINTYPE_PASSWORD:
+                    $password = \dw\props::s_post_val("password");
+                    $correctpassword = self::s_config("password");
+                    if($password == $correctpassword) {
+                        $passwordtime = new \DateTime();
+                        \plugin\auth::_set_passwordtime($passwordtime);
+                        $loginMethod = ['\db\loginhistoryRecord',"create" ];
+                        if(is_callable($loginMethod)) {
+                            $loginMethod();
+                        }
+                        $passwordtime = \plugin\auth::getSessData("passwordtime");
+                        $authtype = \plugin\auth::authtype();
+                        \dw\xhtml::redirect($redirect);
+                    }
+                    break;
+                case self::LOGINTYPE_USER:
+                    $password = \dw\props::s_post_val("password");
+                    $username = \dw\props::s_post_val("username");
+                    
+                    $usersarray = self::s_config("users");
+                    
+                    if(@$usersarray[$username] =$password) {
+                        $passwordtime = new \DateTime();
+                        \plugin\auth::_set_passwordtime($passwordtime);
+                        $loginMethod = ['\db\loginhistoryRecord',"create" ];
+                        if(is_callable($loginMethod)) {
+                            $loginMethod();
+                        }
+                        $passwordtime = \plugin\auth::getSessData("passwordtime");
+                        $authtype = \plugin\auth::authtype();
+                        \dw\xhtml::redirect($redirect);
+                    }
+                    break;
             }
         }
         \plugin\auth::s_loginForm($redirect);
