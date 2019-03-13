@@ -78,22 +78,25 @@ class auth extends \dw\_plugin {
             $redirect = $_SERVER['REQUEST_URI'];
         }
         $whitelist = self::s_config("whitelist");
-        if( is_array($whitelist)){
+        if(is_array($whitelist)) {
             $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
             \dw\xhtml::outhtml("You are loging in from an unknown location<br>");
             \dw\xhtml::outhtml("Your current IP address is '$REMOTE_ADDR'<br>");
         }
         $formData['redirect'] = $redirect;
         $loginttype = self::s_config("loginttype");
-        switch( $loginttype){
+        switch ($loginttype) {
             case self::LOGINTYPE_PASSWORD:
                 \dw\xhtml::form($formData, "auth.loginpassword");
+                die();
                 break;
             case self::LOGINTYPE_USER:
                 \dw\xhtml::form($formData, "auth.loginuser");
+                die();
                 break;
+            default:
+                \dw\app::appThrow("Invalid Login Type", $loginttype);
         }
-        \dw\app::appThrow(null);
     }
     static function s_action_login() {
         $authtype = \plugin\auth::authtype();
@@ -104,7 +107,7 @@ class auth extends \dw\_plugin {
         if(\dw\props::s_post_init()) {
             $redirect = \dw\props::s_post_val("redirect");
             $loginttype = self::s_config("loginttype");
-            switch( $loginttype){
+            switch ($loginttype) {
                 case self::LOGINTYPE_PASSWORD:
                     $password = \dw\props::s_post_val("password");
                     $correctpassword = self::s_config("password");
@@ -126,7 +129,7 @@ class auth extends \dw\_plugin {
                     
                     $usersarray = self::s_config("users");
                     
-                    if(@$usersarray[$username] =$password) {
+                    if(@$usersarray[$username] = $password) {
                         $passwordtime = new \DateTime();
                         \plugin\auth::_set_passwordtime($passwordtime);
                         $loginMethod = ['\db\loginhistoryRecord',"create" ];
