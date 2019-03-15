@@ -11,6 +11,7 @@ class auth extends \dw\_plugin {
     const LOGINTYPE_PASSWORD = "password";
     const LOGINTYPE_USER = "user";
     static function event_dw_xhtml_htmlhead_pre() {
+        self::getSessData("");// Open and close session as early as possible.
         $authType = \plugin\auth::authtype();
         \dw\xhtml::AddMeta('authtype', $authType);
     }
@@ -21,9 +22,13 @@ class auth extends \dw\_plugin {
         }
     }
     static function getSessData($propName) {
-        if(\plugin\auth::$sessData == null) {
+        if(is_null(\plugin\auth::$sessData)) {
             session_start();
-            \plugin\auth::$sessData = $_SESSION;
+            if(is_null($_SESSION)) {
+                \plugin\auth::$sessData = [];
+            } else {
+                \plugin\auth::$sessData = $_SESSION;
+            }
             session_write_close();
         }
         return \dw\props::s_arrayget(\plugin\auth::$sessData, $propName, null);
