@@ -11,7 +11,7 @@ class auth extends \dw\_plugin {
     const LOGINTYPE_PASSWORD = "password";
     const LOGINTYPE_USER = "user";
     static function event_dw_xhtml_htmlhead_pre() {
-        self::getSessData("");// Open and close session as early as possible.
+        self::getSessData(""); // Open and close session as early as possible.
         $authType = \plugin\auth::authtype();
         \dw\xhtml::AddMeta('authtype', $authType);
     }
