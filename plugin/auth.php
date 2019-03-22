@@ -11,7 +11,7 @@ class auth extends \dw\_plugin {
     const LOGINTYPE_PASSWORD = "password";
     const LOGINTYPE_USER = "user";
     static function event_dw_xhtml_htmlhead_pre() {
-        self::getSessData(""); // Open and close session as early as possible.
+        \dw\app::sess();
         $authType = \plugin\auth::authtype();
         \dw\xhtml::AddMeta('authtype', $authType);
     }
@@ -21,27 +21,8 @@ class auth extends \dw\_plugin {
             \plugin\auth::s_loginForm();
         }
     }
-    static function getSessData($propName) {
-        if(is_null(\plugin\auth::$sessData)) {
-            session_start();
-            if(is_null($_SESSION)) {
-                \plugin\auth::$sessData = [];
-            } else {
-                \plugin\auth::$sessData = $_SESSION;
-            }
-            session_write_close();
-        }
-        return \dw\props::s_arrayget(\plugin\auth::$sessData, $propName, null);
-    }
-    static function setSessData($propName, $propVal) {
-        session_start();
-        $_SESSION[$propName] = $propVal;
-        \plugin\auth::$sessData = $_SESSION;
-        session_write_close();
-        return $propVal;
-    }
     static function _set_passwordtime($passwordtime) {
-        \plugin\auth::setSessData("passwordtime", $passwordtime);
+        \dw\app::sess("passwordtime", $passwordtime);
         $authType = "Session opened at " . $passwordtime->format("Y-m-d  H:i:s");
         \plugin\auth::authtype($authType);
     }
@@ -53,7 +34,7 @@ class auth extends \dw\_plugin {
                 return self::$authType;
             }
         }
-        $passwordtime = self::getSessData("passwordtime");
+        $passwordtime = \dw\app::sess("passwordtime");
         if(! $passwordtime) {
             return null;
         }
@@ -61,13 +42,13 @@ class auth extends \dw\_plugin {
     }
     static function authtype($parmAuthValue = null) {
         if(! is_null($parmAuthValue)) {
-            self::$authType = self::setSessData('authtype', $parmAuthValue);
-            return self::$authType;
+            self::$authType = $parmAuthValue;
+            return \dw\app::sess('authtype', self::$authType);
         }
         if(! is_null(self::$authType)) {
             return self::$authType;
         }
-        self::$authType = self::getSessData('authtype');
+        self::$authType = \dw\app::sess('authtype');
         if(! is_null(self::$authType)) {
             return self::$authType;
         }
@@ -75,8 +56,7 @@ class auth extends \dw\_plugin {
         if(is_null(self::$authType)) {
             self::$authType = "Anonymous";
         }
-        self::setSessData('authtype', self::$authType);
-        return self::$authType;
+        return \dw\app::sess('authtype', self::$authType);
     }
     static function s_loginForm($redirect = null) {
         if(is_null($redirect)) {
@@ -123,7 +103,7 @@ class auth extends \dw\_plugin {
                         if(is_callable($loginMethod)) {
                             $loginMethod();
                         }
-                        $passwordtime = \plugin\auth::getSessData("passwordtime");
+                        $passwordtime = \dw\app::sess("passwordtime");
                         $authtype = \plugin\auth::authtype();
                         \dw\xhtml::redirect($redirect);
                     }
@@ -141,7 +121,7 @@ class auth extends \dw\_plugin {
                         if(is_callable($loginMethod)) {
                             $loginMethod();
                         }
-                        $passwordtime = \plugin\auth::getSessData("passwordtime");
+                        $passwordtime = \dw\app::sess("passwordtime");
                         $authtype = \plugin\auth::authtype();
                         \dw\xhtml::redirect($redirect);
                     }
