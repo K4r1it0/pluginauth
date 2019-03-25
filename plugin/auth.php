@@ -10,6 +10,7 @@ class auth extends \dw\_plugin {
     public $password = null;
     const LOGINTYPE_PASSWORD = "password";
     const LOGINTYPE_USER = "user";
+    const AUTHTYPE_ANONYMOUS = "Anonymous";
     static function event_dw_xhtml_htmlhead_pre() {
         \dw\app::sess();
         $authType = \plugin\auth::authtype();
@@ -17,7 +18,7 @@ class auth extends \dw\_plugin {
     }
     static function event_dw_xhtml_htmlhead_post() {
         $authType = \plugin\auth::authtype();
-        if($authType == "Anonymous") {
+        if($authType == \plugin\auth::AUTHTYPE_ANONYMOUS) {
             \plugin\auth::s_loginForm();
         }
     }
@@ -27,11 +28,11 @@ class auth extends \dw\_plugin {
         \plugin\auth::authtype($authType);
     }
     private static function evalAuthType() {
-        $whitelist = self::s_config("whitelist");
+        $whitelist = \plugin\auth::s_config("whitelist");
         if(is_array($whitelist)) {
             if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
-                self::$authType = "White list IP " . $_SERVER['REMOTE_ADDR'];
-                return self::$authType;
+                \plugin\auth::$authType = "White list IP " . $_SERVER['REMOTE_ADDR'];
+                return \plugin\auth::$authType;
             }
         }
         $passwordtime = \dw\app::sess("passwordtime");
@@ -42,40 +43,40 @@ class auth extends \dw\_plugin {
     }
     static function authtype($parmAuthValue = null) {
         if(! is_null($parmAuthValue)) {
-            self::$authType = $parmAuthValue;
-            return \dw\app::sess('authtype', self::$authType);
+            \plugin\auth::$authType = $parmAuthValue;
+            return \dw\app::sess('authtype', \plugin\auth::$authType);
         }
-        if(! is_null(self::$authType)) {
-            return self::$authType;
+        if(! is_null(\plugin\auth::$authType)) {
+            return \plugin\auth::$authType;
         }
-        self::$authType = \dw\app::sess('authtype');
-        if(! is_null(self::$authType)) {
-            return self::$authType;
+        \plugin\auth::$authType = \dw\app::sess('authtype');
+        if(! is_null(\plugin\auth::$authType)) {
+            return \plugin\auth::$authType;
         }
-        self::evalAuthType();
-        if(is_null(self::$authType)) {
-            self::$authType = "Anonymous";
+        \plugin\auth::evalAuthType();
+        if(is_null(\plugin\auth::$authType)) {
+            \plugin\auth::$authType = \plugin\auth::AUTHTYPE_ANONYMOUS;
         }
-        return \dw\app::sess('authtype', self::$authType);
+        return \dw\app::sess('authtype', \plugin\auth::$authType);
     }
     static function s_loginForm($redirect = null) {
         if(is_null($redirect)) {
             $redirect = $_SERVER['REQUEST_URI'];
         }
-        $whitelist = self::s_config("whitelist");
+        $whitelist = \plugin\auth::s_config("whitelist");
         if(is_array($whitelist)) {
             $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
             \dw\xhtml::outhtml("You are loging in from an unknown location<br>");
             \dw\xhtml::outhtml("Your current IP address is '$REMOTE_ADDR'<br>");
         }
         $formData['redirect'] = $redirect;
-        $loginttype = self::s_config("loginttype");
+        $loginttype = \plugin\auth::s_config("loginttype");
         switch ($loginttype) {
-            case self::LOGINTYPE_PASSWORD:
+            case \plugin\auth::LOGINTYPE_PASSWORD:
                 \dw\xhtml::form($formData, "auth.loginpassword");
                 die();
                 break;
-            case self::LOGINTYPE_USER:
+            case \plugin\auth::LOGINTYPE_USER:
                 \dw\xhtml::form($formData, "auth.loginuser");
                 die();
                 break;
@@ -83,19 +84,20 @@ class auth extends \dw\_plugin {
                 \dw\app::appThrow("Invalid Login Type", $loginttype);
         }
     }
-    static function s_action_login() {
+    static function s_action_login($redirect = null) {
         $authtype = \plugin\auth::authtype();
-        if($authtype != "Anonymous") {
+        if($authtype != \plugin\auth::AUTHTYPE_ANONYMOUS) {
             \dw\xhtml::redirect($redirect);
         }
-        $redirect = "";
         if(\dw\props::s_post_init()) {
-            $redirect = \dw\props::s_post_val("redirect");
-            $loginttype = self::s_config("loginttype");
+            if(is_null($redirect)) {
+                $redirect = \dw\props::s_post_val("redirect");
+            }
+            $loginttype = \plugin\auth::s_config("loginttype");
             switch ($loginttype) {
-                case self::LOGINTYPE_PASSWORD:
+                case \plugin\auth::LOGINTYPE_PASSWORD:
                     $password = \dw\props::s_post_val("password");
-                    $correctpassword = self::s_config("password");
+                    $correctpassword = \plugin\auth::s_config("password");
                     if($password == $correctpassword) {
                         $passwordtime = new \DateTime();
                         \plugin\auth::_set_passwordtime($passwordtime);
@@ -108,12 +110,10 @@ class auth extends \dw\_plugin {
                         \dw\xhtml::redirect($redirect);
                     }
                     break;
-                case self::LOGINTYPE_USER:
+                case \plugin\auth::LOGINTYPE_USER:
                     $password = \dw\props::s_post_val("password");
                     $username = \dw\props::s_post_val("username");
-                    
-                    $usersarray = self::s_config("users");
-                    
+                    $usersarray = \plugin\auth::s_config("users");
                     if(@$usersarray[$username] = $password) {
                         $passwordtime = new \DateTime();
                         \plugin\auth::_set_passwordtime($passwordtime);

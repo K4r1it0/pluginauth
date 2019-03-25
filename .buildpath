@@ -2,12 +2,7 @@
 <buildpath>
 	<buildpathentry kind="src" path="db"/>
 	<buildpathentry kind="con" path="org.eclipse.php.core.LANGUAGE"/>
-	<buildpathentry excluding="auth/" kind="src" path="plugin">
-		<attributes>
-			<attribute name="composer" value="source"/>
-		</attributes>
-	</buildpathentry>
-	<buildpathentry kind="src" path="plugin/auth">
+	<buildpathentry kind="src" path="plugin">
 		<attributes>
 			<attribute name="composer" value="source"/>
 		</attributes>
