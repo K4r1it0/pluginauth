@@ -1,7 +1,7 @@
 {
 	"name" : "dwightframework/pluginauth",
 	"require" : {
-		"dwightframework/main" : "1.27.23"
+		"dwightframework/main" : "1.27.24"
 	},
 	"repositories" : [{
 			"type" : "composer",
@@ -30,5 +30,5 @@
 	"license" : "proprietary",
 	"type" : "library",
 	"homepage" : "http://www.stealthpartner.com",
-	"description" : "1.27.23"
+	"description" : "1.27.24"
 }

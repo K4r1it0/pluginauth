@@ -4,15 +4,15 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8df83d0f1b4db1773646e4e4d827a244",
+    "content-hash": "0bade00b5282645ee9fdff560dd72a2c",
     "packages": [
         {
             "name": "dwightframework/main",
-            "version": "1.27.22",
+            "version": "1.27.24",
             "source": {
                 "type": "git",
                 "url": "https://dwightwilbanks@bitbucket.org/stealthpartner/main.git",
-                "reference": "0a2eaf8837b199cf39aa05dee5fa62b8daa112d7"
+                "reference": "6f00bcd9a56d80c8e225b70b49dbc05f95108a60"
             },
             "require": {
                 "kint-php/kint": "~2.2"
@@ -40,9 +40,9 @@
                     "homepage": "http://www.stealthpartner.com"
                 }
             ],
-            "description": "1.27.22",
+            "description": "1.27.24",
             "homepage": "http://www.stealthpartner.com",
-            "time": "2019-03-25T06:22:10+00:00"
+            "time": "2019-04-03T16:07:05+00:00"
         },
         {
             "name": "kint-php/kint",
