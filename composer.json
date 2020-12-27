@@ -1,7 +1,7 @@
 {
-	"name" : "dwightframework/pluginauth",
+	"name" : "testtesttest/pluginauth",
 	"require" : {
-		"dwightframework/main" : "dev-master"
+		"testtesttest/main" : "dev-master"
 	},
 	"repositories" : [{
 			"type" : "composer",
